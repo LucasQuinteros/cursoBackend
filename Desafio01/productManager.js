@@ -47,4 +47,3 @@ p.addProduct("producto0","Este es un producto prueba",200,"Sin imagen","abc123",
 p.addProduct("producto1","Este es un producto prueba",200,"Sin imagen","abc12")
 p.getProducts()
 p.getProductById(5)
-while (true){}
