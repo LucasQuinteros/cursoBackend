@@ -2,6 +2,7 @@ class ProductManager{
     constructor(){
         this.products = [];
     }
+    //metodo de la clase que agrega un producto si este no existe y todos sus campos estan definidos
     addProduct(title,description,price,thumbnail,code,stock){
         if (! this.productExists(code)){
             let newProduct = {
@@ -24,13 +25,16 @@ class ProductManager{
         }
         
     }
+    //devuelve los productos que se crearon
     getProducts(){
         console.log(this.products);
         return this.products;
     }
+    //chequea si el codigo de producto ya existe
     productExists(codeBuscado){
         return this.products.find((element) => element.code === codeBuscado);
     }
+    //devuelve el producto con id idbuscado
     getProductById( idBuscado){
 
         let p = this.products.find((element) => element.id === idBuscado);
