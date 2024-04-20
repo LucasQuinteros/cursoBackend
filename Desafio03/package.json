@@ -1,0 +1,15 @@
+{
+  "name": "desafio03",
+  "version": "1.0.0",
+  "description": "servidor con express para el curso backend de coderhouse",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lucas Quinteros",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
