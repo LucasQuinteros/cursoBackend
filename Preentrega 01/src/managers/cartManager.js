@@ -11,7 +11,7 @@ class CarritoManager{
     async addCart(){
         let allCarts = await this.getCarts();
         
-        
+        //armo un carrito nuevo con id unica con un array vacio de productos
         const newCart = {
             id : allCarts.length,
             products : []
@@ -42,11 +42,15 @@ class CarritoManager{
     //si no existe el producto en el carrito agrega el id del producto al carrito con quantity uno
     async addProductToCart(idCart,idProducto){
         let allCarts = await this.getCarts();
+        
+        //busco el carrito dentro del archivo de carritos si no existe lanzo error
         const cart = allCarts.find((element)=> element.id === idCart);
         if (!cart) throw new Error(`(addProductToCart)Error no se encontro el carrito con id ${idCart}`);
         
         const indexProduct = allCarts[cart.id].products.findIndex((element)=> element.product === idProducto);
 
+        //si no encontre el producto dentro del carrito agrego su id con cantidad 1
+        //si esta dentro del carrito aumento su cantidad en 1
         if (indexProduct === -1){
             const newProduct = {
                 product : idProducto,

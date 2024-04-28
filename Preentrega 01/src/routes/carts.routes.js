@@ -47,9 +47,11 @@ async function addProductToCart(req,res){
         if (isNaN(cid)) return res.status(400).json(`El cart id '${req.params.cid}' no es valido` );
         if (isNaN(pid)) return res.status(400).json(`El product id '${req.params.pid}' no es valido` );
         
+        
         const p = await productManager.getProductById(pid);
+        //si el producto con pid no existe se produce un error
         if (!p) throw new Error(`El producto con id '${req.params.pid}' no existe`);
-        console.log(p)
+        
         const carts = await carritoManager.addProductToCart(cid,pid);
 
 
