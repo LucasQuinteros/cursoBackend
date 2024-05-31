@@ -5,8 +5,9 @@ import productModel from "../models/product.model.js";
 
 class productDao{
     constructor(){}
-    async getAll(){
-        const products = await productModel.find()
+    async getAll(query,options){
+        
+        const products = await productModel.paginate(query,options)
         return products;
     }
     async getMany(number){

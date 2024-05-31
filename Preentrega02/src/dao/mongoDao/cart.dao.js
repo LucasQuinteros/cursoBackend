@@ -1,5 +1,5 @@
 import cartModel from "../models/cart.model.js";
-
+import productModel from "../models/product.model.js";
 
 
 
@@ -17,42 +17,57 @@ class cartDao{
         const cart = await cartModel.create(data)
         return cart
     }
-    async update(id,data){
-        await cartModel.findByIdAndUpdate(id,data)
-        const cart = await cartModel.findById(id)
-        return cart
+    async update(cid,data){
+        await cartModel.updateOne({ _id: cid }, { $set: { products: [] } });
+        await cartModel.updateOne({ _id: cid }, { $set: { products: data } });
+        const cart = await cartModel.findById(cid);
+        return cart;
     }
-    async deleteOne(id){
-        const cart = await cartModel.deleteOne({_id : id})
-        if ( cart.deletedCount === 0) return false
-        return true
+    async deleteProductInCart(cid,pid){
+        const product = await productModel.findById(pid)
+        if( !product) return { product : false}
+
+        const cart = await cartModel.findOneAndUpdate({_id : cid, "products.product": pid},{$inc : {"products.$.quantity" : -1}})
+        //const cart = await cartModel.deleteOne({_id : id})
+        if ( !cart) return {cart : false}
+        const cartUpdate = await cartModel.findById(cid);
+        return cartUpdate;
     }
-    async addProductToCart(cid,pid){
+    async deleteAllProductsInCart(cid){
 
-        let  cart = await this.getById(cid);
-
-        if (!cart) throw new Error(`El carrito con id '${req.params.pid}' no existe`);
+        const cart = await cartModel.findByIdAndUpdate({_id : cid},{$set : {products : []}})
         
-        const indexProduct = cart.products.findIndex((element)=> element.product === pid);
-
-        //si no encontre el producto dentro del carrito agrego su id con cantidad 1
-        //si esta dentro del carrito aumento su cantidad en 1
-        if (indexProduct === -1){
-            const newProduct = {
-                product : pid,
-                quantity : 1
-            }
-            cart.products.push(newProduct);
-        }
-        else {
-            cart.products[indexProduct].quantity += 1;
-        }
-
-        cart = await this.update(cid,cart);
-        console.log(cart)
-        return cart
+        if ( !cart) return {cart : false}
+        const cartUpdate = await cartModel.findById(cid);
+        return cartUpdate;
     }
-    
+
+    async addProductToCart(cid,pid){
+        const product = await productModel.findById(pid);
+        if (!product) return { product: false };
+        const cart = await cartModel.findById(cid);
+        if (!cart) return { cart: false };
+
+        const productInCart = await cartModel.findOneAndUpdate({_id : cid, "products.product": pid},{$inc : {"products.$.quantity" : 1}})
+        if (!productInCart){
+            await cartModel.updateOne({ _id: cid }, { $push: { products: { product: pid, quantity: 1 } } });
+        }
+
+        const cartUpdate = await cartModel.findById(cid);
+        
+
+        return cartUpdate
+    }
+    async updateQuantityProductInCart(cid, pid, quantity) {
+        const product = await productModel.findById(pid);
+        if (!product) return { product: false };
+      
+        const cart = await cartModel.findOneAndUpdate({ _id: cid, "products.product": pid }, { $set: { "products.$.quantity": quantity } });
+        if (!cart) return { cart: false };
+      
+        const cartUpdate = await cartModel.findById(cid);
+        return cartUpdate;
+      };
 }
 
 export default cartDao;

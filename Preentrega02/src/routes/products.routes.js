@@ -19,21 +19,39 @@ router.put('/:pid', actualizarProductoConId);
 router.delete('/:pid', borrarProductoConId);
 
 async function obtenerProductos(req,res){
-    let limit = req.query.limit;
+    let { limit, sort, page, category,status} = req.query;
+    let query = {}
     try{
-        //si no se pasa limit en el query devuelvo todos los documentos
-        if (!limit) {
-            const products = await productManagerDao.getAll();
-            return res.status(200).json({status: 'success', payload : products});
-        } 
+        
         //chequeo que limit sea un entero
         limit = parseInt(limit);
-        if (isNaN(limit)) return res.status(400).json(`La cantidad '${req.query.limit}' no es valida` );
         
-        //devuelvo la cantidad de items que me piden 
-        let products = await productManagerDao.getMany(limit);
+        let options = {
+            limit : limit || 10,
+            page : page || 1,
+            
+            lean: true
+        }
         
-        return res.status(200).json({status: 'success', payload : products});
+        if (category) {
+            query = { category  }
+        }
+        if (status){
+            query = { status  }
+        }
+        if (sort != undefined){
+            options = {
+                ...options,
+                sort : {
+                    price : sort === "asc" ? 1 : -1
+                }
+            }
+        }
+        //console.log(category,status,query,options)
+        
+        let products = await productManagerDao.getAll(query,options);
+        
+        return res.status(200).json({status: 'success', products});
         
     }
     catch (error){
