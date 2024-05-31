@@ -44,7 +44,7 @@ async function getOneCart(req,res){
         
         carts = await cartManagerDao.getById(cid);
         
-        return res.status(200).json({status : 'success', payload : carts.products});
+        return res.status(200).json({status : 'success', payload : carts});
     } catch (error) {
         return res.status(400).json({status : 'error ',payload:error.message});
     }
@@ -97,8 +97,9 @@ async function deleteProductsCart(req,res){
 }
 async function updateProductsCart(req,res){
     try {
-        const { cid } = req.params;
+        const  {cid}    = req.params;
         const data    = req.body.products
+        
         const cart = await cartManagerDao.update(cid, data);
         if (!cart) return res.status(404).json({ status: "Error", msg: "no se encontro el carrito" });
         

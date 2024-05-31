@@ -10,7 +10,8 @@ class cartDao{
    
     
     async getById(id){
-        const cart = await cartModel.findById(id)
+        //const cart = await cartModel.find()
+        const cart = await cartModel.findById(id).populate("products.product")
         return cart
     }
     async create(data){
@@ -18,7 +19,9 @@ class cartDao{
         return cart
     }
     async update(cid,data){
+        
         await cartModel.updateOne({ _id: cid }, { $set: { products: [] } });
+        
         await cartModel.updateOne({ _id: cid }, { $set: { products: data } });
         const cart = await cartModel.findById(cid);
         return cart;
