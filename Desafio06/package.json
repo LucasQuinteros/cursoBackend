@@ -1,0 +1,19 @@
+{
+  "name": "desafio04",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx nodemon src/app.js"
+  },
+  "author": "Lucas Quinteros",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.4.0",
+    "mongoose-paginate-v2": "^1.8.2",
+    "nodemon": "^3.1.0"
+  }
+}
