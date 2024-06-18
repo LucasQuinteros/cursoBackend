@@ -49,7 +49,7 @@ async function getCurrent(req,res){
     try {
         const accesToken = req.cookies.accesToken
         const decodedData = verifyToken(accesToken)
-        if (!decodedData) return req.status(403).json({ status: "error", msg: "Invalid Token"})
+        if (!decodedData) return res.status(403).json({ status: "error", msg: "Invalid Token"})
              
         return res.status(200).json({status: "success", payload: decodedData})
     } catch (error) {
