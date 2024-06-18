@@ -45,7 +45,7 @@ export function initializePassport(){
     passport.use('google',new GoogleStrategy(
         {
             clientID: "371631022803-ghudsheu0e7emes2kurvb9v90pbslrmd.apps.googleusercontent.com",
-            clientSecret: "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",
+            clientSecret: "",
             callbackURL: "http://localhost:8080/api/session/login",
         },
         async ( accesToken,refreshToken,profiel,cb) => {
