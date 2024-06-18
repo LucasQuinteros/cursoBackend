@@ -3,6 +3,7 @@ import productDao  from "../dao/mongoDao/product.dao.js"
 import ProductManager  from "../dao/fsManagers/productManager.js";
 
 
+
 const JSONPATH = "./src/dao/fsManagers/data/productos.json";
 
 //const productManager = new ProductManager(JSONPATH);
