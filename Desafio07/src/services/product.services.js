@@ -10,7 +10,7 @@ async function obtenerProductoConId(pid){
     return await productDao.getById(pid)
 }
 async function crearProducto(productData){
-    const productExist = await productDao.getByCode(p.code)
+    const productExist = await productDao.getByCode(productData.code)
     if (productExist.length > 0) 
         return false
     return await productDao.create(productData)
