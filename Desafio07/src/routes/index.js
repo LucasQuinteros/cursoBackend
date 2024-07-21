@@ -5,8 +5,8 @@ import sessionRouters from "./session.routes.js"
 import { isLogin } from "../middleware/isLogin.middleware.js";
 const router = Router()
 
-router.use("/products",isLogin, productsRouters);
-router.use("/carts",isLogin, cartsRouters);
+router.use("/products", productsRouters);
+router.use("/carts", cartsRouters);
 router.use("/session", sessionRouters);
 
 export default router;
