@@ -1,6 +1,4 @@
-import productDao  from "../dao/mongoDao/product.dao.js"
-
-const productManagerDao = new productDao()
+import producServices from "../services/product.services.js"
 
 async function obtenerProductos(req,res){
     let { limit, sort, page, category,status} = req.query;
@@ -33,7 +31,7 @@ async function obtenerProductos(req,res){
         }
         //console.log(category,status,query,options)
         
-        let products = await productManagerDao.getAll(query,options);
+        let products = await producServices.obtenerProductoConId(query,options);
         
         return res.status(200).json({status: 'success', products});
         
@@ -49,7 +47,7 @@ async function obtenerProductoConId(req,res){
         const pid = req.params.pid
         
 
-        const p = await productManagerDao.getById(pid);
+        const p = await producServices.getById(pid);
         
         
         //si se encontro el producto con id lo devuelvo sino devuelvo un error
@@ -64,10 +62,9 @@ async function obtenerProductoConId(req,res){
 async function crearProducto(req,res){
     try {
         const p = req.body
-        const productExist = await productManagerDao.getByCode(p.code)
-        if (productExist.length > 0) return res.status(400).json({status: 'error', payload :`El producto con codigo '${p.code}' ya existe`})
-
-        const newProduct = await productManagerDao.create(p)
+        
+        const newProduct = await producServices.create(p)
+        if (newProduct == false) return res.status(400).json({status: 'error', payload :`El producto con codigo '${p.code}' ya existe`})
         
         return res.status(201).json({status: 'success', payload : newProduct})
     } catch (error) {
@@ -82,7 +79,7 @@ async function actualizarProductoConId(req,res){
         const productData = req.body;
 
 
-        const newProduct = await productManagerDao.update(pid,productData)
+        const newProduct = await producServices.update(pid,productData)
         
         return res.status(201).json({status: 'success', payload : newProduct})
     } catch (error) {
@@ -97,7 +94,7 @@ async function borrarProductoConId(req,res){
         const pid = req.params.pid
         
         
-        const deleted = await productManagerDao.deleteOne(pid)
+        const deleted = await producServices.deleteOne(pid)
         if (!deleted) return res.status(404).json({status: 'error', payload: `No se elimino el producto con id '${req.params.pid}'`});
         return res.status(201).json({status: 'success', payload:`se borro el producto con id ${pid}`})
 

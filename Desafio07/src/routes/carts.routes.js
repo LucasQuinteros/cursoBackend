@@ -15,8 +15,8 @@ const JSONPATHPRODUCTOS = "./src/dao/fsManagersdata/productos.json"
 const router = Router();
 
 router.post("/",passportCall("jwt"), authorization("user"),cartsController.createCart);
-router.get("/",passportCall("jwt"), authorization("user"),cartsController.getOneCart);
-router.get("/:cid",passportCall("jwt"), authorization("user"),cartsController.getOneCart);
+router.get("/",passportCall("jwt"), authorization("user"),cartsController.getById);
+router.get("/:cid",passportCall("jwt"), authorization("user"),cartsController.getById);
 router.post("/:cid/products/:pid",passportCall("jwt"), authorization("user"),cartsController.addProductToCart)
 router.delete("/:cid/products/:pid",passportCall("jwt"), authorization("user"),cartsController.deleteOneProductCart)
 router.delete("/:cid", passportCall("jwt"), authorization("user"),cartsController.deleteProductsCart)

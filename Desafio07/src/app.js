@@ -10,7 +10,7 @@ import envs from './config/env.config.js'
 
 
 
-console.log("PORT" , envs.PORT)
+
 const app = express();
 const db = new Database(envs.MONGO_URL)
 

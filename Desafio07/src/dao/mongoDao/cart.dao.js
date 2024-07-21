@@ -3,11 +3,11 @@ import productModel from "../models/product.model.js";
 
 
 
-class cartDao{
+class CartDao{
     constructor(){
 
     }
-   
+    
     
     async getById(id){
         //const cart = await cartModel.find()
@@ -73,4 +73,4 @@ class cartDao{
       };
 }
 
-export default cartDao;
+export default CartDao;
