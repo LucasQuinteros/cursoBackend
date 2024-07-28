@@ -1,7 +1,6 @@
-import { createToken, verifyToken } from '../utils/jwt.js'
-import { createHash, isValidPassword } from '../utils/hashPassword.js'
-import UserDao from '../dao/mongoDao/user.dao.js'
-const userDao = new UserDao()
+
+import { createToken } from '../utils/jwt.js'
+
 
 async function registrarUsuario (req, res) {
     try {

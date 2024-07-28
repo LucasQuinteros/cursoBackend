@@ -1,26 +1,27 @@
-import ProductDao  from "../dao/mongoDao/product.dao.js"
 
-const productDao = new ProductDao()
+import productRepository from "../persistences/mongo/repositories/product.repository.js"
+
+
 
 async function obtenerProductos(query,options){
-    return await productDao.getAll(query,options)
+    return await productRepository.getAll(query,options)
     
 }
 async function obtenerProductoConId(pid){
-    return await productDao.getById(pid)
+    return await productRepository.getById(pid)
 }
 async function crearProducto(productData){
-    const productExist = await productDao.getByCode(productData.code)
+    const productExist = await productRepository.getByCode(productData.code)
     if (productExist.length > 0) 
         return false
-    return await productDao.create(productData)
+    return await productRepository.create(productData)
 }
 async function actualizarProductoConId(pid,productData){
-    return await productDao.update(pid,productData)
+    return await productRepository.update(pid,productData)
     
 }
 async function borrarProductoConId(pid){
-    return await productDao.deleteOne(pid)
+    return await productRepository.deleteOne(pid)
     
 }
 

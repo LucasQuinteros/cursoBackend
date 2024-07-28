@@ -35,9 +35,7 @@ async function addProductToCart(req,res){
         
         const cart = await cartsServices.addProductToCart(cid,pid)
         
-        if (cart.product == false ) return res.status(404).json({status : 'error ',msg: "no se encontro el producto"});
-        if (cart.cart == false ) return res.status(404).json({status : 'error ',msg: "no se encontro el carrito"});
-
+        
         return res.status(201).json({status : 'success', payload : cart});
     } catch (error) {
         return res.status(400).json({status : 'error ',payload:error.message});
@@ -48,10 +46,8 @@ async function deleteOneProductCart(req,res){
         const cid = req.params.cid;
         const pid = req.params.pid;
         
-        const cart = await cartsServices.deleteProductInCart(cid,pid)
+        const cart = await cartsServices.deleteOneProductCart(cid,pid)
 
-        if (cart.product == false ) return res.status(404).json({status : 'error ',msg: "no se encontro el producto"});
-        if (cart.cart == false ) return res.status(404).json({status : 'error ',msg: "no se encontro el carrito"});
         return res.status(201).json({status : 'success', payload : cart});
     } catch (error) {
         return res.status(400).json({status : 'error ',msg:error.message});
@@ -62,7 +58,7 @@ async function deleteProductsCart(req,res){
         const cid = req.params.cid;
         
         
-        const cart = await cartsServices.deleteAllProductsInCart(cid)
+        const cart = await cartsServices.deleteProductsCart(cid)
 
         
         if (cart.cart == false ) return res.status(404).json({status : 'error ',msg: "no se encontro el carrito"});

@@ -37,7 +37,7 @@ async function obtenerProductos(req,res){
         
     }
     catch (error){
-        return res.status(400).json({status: 'error', payload :error.message});
+        return res.status(500).json({status: 'error', message :'Internal error server'});
     }
     
 }
@@ -56,7 +56,7 @@ async function obtenerProductoConId(req,res){
         
     }
     catch (error) {
-        return res.status(400).json({status: 'error', payload :error.message});
+        return res.status(500).json({status: 'error', message :'Internal error server'});
     }
 }
 async function crearProducto(req,res){
@@ -69,7 +69,7 @@ async function crearProducto(req,res){
         return res.status(201).json({status: 'success', payload : newProduct})
     } catch (error) {
         
-        return res.status(400).json({status: 'error', payload :error.message});
+        return res.status(500).json({status: 'error', message :'Internal error server'});
     }
     
 }
@@ -84,7 +84,7 @@ async function actualizarProductoConId(req,res){
         return res.status(201).json({status: 'success', payload : newProduct})
     } catch (error) {
         
-        return res.status(400).json({status: 'error', payload :error.message});
+        return res.status(500).json({status: 'error', message :'Internal error server'});
         
     }
     
@@ -100,7 +100,7 @@ async function borrarProductoConId(req,res){
 
     } catch (error) {
         
-        return res.status(400).json({status: 'error', payload :error.message});
+        return res.status(500).json({status: 'error', message :'Internal error server'});
         
     }
     

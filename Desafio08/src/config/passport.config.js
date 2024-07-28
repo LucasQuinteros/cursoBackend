@@ -2,9 +2,10 @@ import passport from "passport"
 import local from "passport-local"
 import google from "passport-google-oauth20"
 import jwt from "passport-jwt";
-import UserDao from "../dao/mongoDao/user.dao.js"
+
 import { createHash, isValidPassword } from "../utils/hashPassword.js"
 import envs from './env.config.js'
+import userRepository from "../persistences/mongo/repositories/user.repository.js";
 
 const LocalStrategy = local.Strategy
 const GoogleStrategy= google.Strategy
@@ -12,7 +13,7 @@ const JWTStrategy = jwt.Strategy;
 const ExtractJWT = jwt.ExtractJwt;
 
 
-const userDao = new UserDao()
+
 const cookieExtractor = (req) => {
     let token = null;
   
@@ -31,11 +32,11 @@ export function initializePassport(){
             try {
                 const userData = req.body
 
-                const userExist = await userDao.getByEmail(userData.email)
+                const userExist = await userRepository.getByEmail(userData.email)
                 if (userExist) return done(null,false, {message: 'El email ya se encuentra en uso'})
                 
                 userData.password = createHash(userData.password)
-                const newUser = await userDao.create(userData)
+                const newUser = await userRepository.create(userData)
                 if (!newUser) return done(null,false, {message: 'No se pudo crear el usuario'})
                 return done(null,newUser)
             } catch (error) {
@@ -47,7 +48,7 @@ export function initializePassport(){
         async ( username,password,done) => {
             try {
                 
-                const user = await userDao.getByEmail(username)
+                const user = await userRepository.getByEmail(username)
                 if (!user || !isValidPassword(user,password)) return done(null,false,{message: 'El email o el password son incorrectos'})
                 
                 done(null,user)
@@ -71,9 +72,9 @@ export function initializePassport(){
                     last_name: name.familyName,
                     email: emails[0].value,
                 }
-                const userExist = await userDao.getByEmail(user.email)
+                const userExist = await userRepository.getByEmail(user.email)
                 if(userExist) return cb(null,userExist)
-                const newUser = await userDao.create(user)
+                const newUser = await userRepository.create(user)
                 
                 cb(null,newUser)
                 
@@ -92,7 +93,7 @@ export function initializePassport(){
           async (jwt_payload, done) => {
             try {
                 
-                return done(null, await userDao.getById(jwt_payload._id));
+                return done(null, await userRepository.getById(jwt_payload._id));
             } catch (error) {
               return done(error);
             }
@@ -104,7 +105,7 @@ export function initializePassport(){
         done(null,user._id)
     })
     passport.deserializeUser(async (id,done) =>{
-        const user = await userDao.getById(id)
+        const user = await userRepository.getById(id)
         console.log('desserial')
         console.log(user)
         done(null,user)

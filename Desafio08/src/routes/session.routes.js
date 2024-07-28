@@ -10,7 +10,7 @@ import sessionController from '../controllers/session.controller.js';
 
 const router = Router()
 
-router.post('/register',passportCall('register'), sessionController.registrarUsuario)
+router.post('/register',passportCall('register'),userLoginValidator, sessionController.registrarUsuario)
 router.post('/login',passportCall('login'), sessionController.login)
 router.get('/google',passportCall('google',
                                             {
