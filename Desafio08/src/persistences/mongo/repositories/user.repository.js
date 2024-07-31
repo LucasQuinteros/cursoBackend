@@ -2,8 +2,8 @@ import userModel  from "../models/user.model.js"
 
 
 
-async function getAll(query,options){
-    const user = await userModel.paginate(query,options)
+async function getById(id){
+    const user = await userModel.findOne({_id : id})
     return user;
     
 }
@@ -30,7 +30,7 @@ async function deleteOne(id){
 }
 
 export default {
-    getAll,
+    getById,
     getByEmail,
     create,
     update,

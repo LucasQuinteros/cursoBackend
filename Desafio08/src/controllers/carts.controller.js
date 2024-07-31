@@ -1,4 +1,5 @@
 import cartsServices from "../services/carts.services.js"
+import ticketServices from "../services/ticket.services.js";
 
 //agrega un carrito nuevo sin productos
 async function createCart(req,res){
@@ -98,7 +99,22 @@ async function updateQuantityProductCart(req,res){
       }
     
 }
-
+async function purchase(req,res){
+    try {
+        const { cid } = req.params;
+        const cart = await cartsServices.getById(cid);
+        if (!cart) return res.status(404).json({ status: "Error", msg: `No se encontró el carrito con el id ${cid}` });
+        // Obtener el total del carrito
+        const total = await cartsServices.purchase(cid);
+        // Crear el ticket
+        const ticket = await ticketServices.createTicket(req.user.email, total);
+        
+        
+        return res.status(201).json({status : 'success', payload : ticket });
+    } catch (error) {
+        return res.status(400).json({status : 'error ',payload:error.message});
+    }
+}
 
 export default {
     createCart,
@@ -107,5 +123,6 @@ export default {
     deleteOneProductCart,
     deleteProductsCart,
     updateProductsCart,
-    updateQuantityProductCart
+    updateQuantityProductCart,
+    purchase
 }

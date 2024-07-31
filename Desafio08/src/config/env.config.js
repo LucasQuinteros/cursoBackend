@@ -10,5 +10,7 @@ export default {
     MONGO_URL: process.env.MONGO_URL,
     CODE_SECRET: process.env.CODE_SECRET,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    GMAIL_PASS : process.env.GMAIL_PASS,
+    GMAIL_USER : process.env.GMAIL_USER
 }

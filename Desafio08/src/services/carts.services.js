@@ -1,5 +1,6 @@
 
 import cartsRepository from "../persistences/mongo/repositories/carts.repository.js"
+import productRepository from "../persistences/mongo/repositories/product.repository.js"
 
 
 
@@ -29,6 +30,27 @@ async function updateQuantityProductCart(cid, pid, quantity){
     
     return await cartsRepository.updateQuantityProductInCart(cid, pid, quantity)
 }
+async function purchase(cid){
+    const cart = await cartsRepository.getById(cid);
+    let total = 0;
+    const products = [];
+
+    for( const product of cart.products) {
+        const prod = await productRepository.getById(product.product);
+        if(prod.stock >= product.quantity) {
+          total += prod.price * product.quantity;
+          
+        } else {
+          products.push(product)
+        }
+        
+        // Modificar los productos del carrito
+        await cartsRepository.update(cid, products);
+    }
+
+    return total;
+    
+}
 
 export default {
     createCart,
@@ -37,5 +59,6 @@ export default {
     deleteOneProductCart,
     deleteProductsCart,
     updateProductsCart,
-    updateQuantityProductCart
+    updateQuantityProductCart,
+    purchase
 }

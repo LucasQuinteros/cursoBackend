@@ -24,6 +24,6 @@ router.delete("/:cid/products/:pid",passportCall("jwt"), authorization("user"),c
 router.delete("/:cid", passportCall("jwt"), authorization("user"),checkProductAndCart,cartsController.deleteProductsCart)
 router.put("/:cid",passportCall("jwt"), authorization("user"),checkProductAndCart,cartsController.updateProductsCart)
 router.put("/:cid/products/:pid",passportCall("jwt"), authorization("user"),checkProductAndCart,cartsController.updateQuantityProductCart)
-
+router.get("/:cid/purchase",passportCall("jwt"), authorization("user"),cartsController.purchase)
 
 export default router;

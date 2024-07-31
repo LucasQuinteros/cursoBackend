@@ -1,4 +1,5 @@
 
+import { userResponseDto } from '../dto/user-response.dto.js'
 import { createToken } from '../utils/jwt.js'
 
 
@@ -33,9 +34,9 @@ async function registrarUsuario (req, res) {
   
   async function getCurrent(req,res){
       try {
-          const user = req.user
-               
-          return res.status(200).json({status: "success", payload: user})
+          
+          const userDto =  userResponseDto(req.user)
+          return res.status(200).json({status: "success", payload: userDto})
       } catch (error) {
           console.log(error)
           res.status(500).json({status : "error", msg : "Internal server error"})
