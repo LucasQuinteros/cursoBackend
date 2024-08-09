@@ -2,7 +2,7 @@ import { Router } from "express";
 
 
 
-import producstController from "../controllers/producst.controller.js"
+import productsController from "../controllers/products.controller.js"
 import { authorization,passportCall } from "../middleware/passport.middleware.js";
 import { productDataValidator } from "../validators/productData.validator.js";
 
@@ -15,13 +15,16 @@ import { productDataValidator } from "../validators/productData.validator.js";
 
 const router = Router();
 
-router.get('/',producstController.obtenerProductos);
-router.get('/:pid', producstController.obtenerProductoConId);
 
-router.post('/',passportCall('jwt'),authorization('admin'),productDataValidator,producstController.crearProducto);
+router.get('/',productsController.obtenerProductos);
+router.get('/:pid', productsController.obtenerProductoConId);
 
-router.put('/:pid',passportCall('jwt'),authorization('admin'), producstController.actualizarProductoConId);
-router.delete('/:pid',passportCall('jwt'),authorization('admin'), producstController.borrarProductoConId);
+router.get("/mockingproducts/:quantity",passportCall('jwt'),authorization('admin'), productsController.productMock);
+
+router.post('/',passportCall('jwt'),authorization('admin'),productDataValidator,productsController.crearProducto);
+
+router.put('/:pid',passportCall('jwt'),authorization('admin'), productsController.actualizarProductoConId);
+router.delete('/:pid',passportCall('jwt'),authorization('admin'), productsController.borrarProductoConId);
 
 
 export default router;

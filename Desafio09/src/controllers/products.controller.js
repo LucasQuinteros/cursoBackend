@@ -1,4 +1,7 @@
+import { badRequestError, notFoundError } from "../errors/customError.js";
+import { generateProductMocks } from "../mocks/product.mocks.js";
 import producServices from "../services/product.services.js"
+
 
 async function obtenerProductos(req,res){
     let { limit, sort, page, category,status} = req.query;
@@ -38,7 +41,7 @@ async function obtenerProductos(req,res){
     }
     catch (error){
         console.log(error)
-        return res.status(500).json({status: 'error', message :'Internal error server'});
+        next(error)
     }
     
 }
@@ -52,12 +55,12 @@ async function obtenerProductoConId(req,res){
         
         
         //si se encontro el producto con id lo devuelvo sino devuelvo un error
-        if (p) return res.status(200).json({status: 'success', payload : p});
-        else return res.status(404).json({status: 'error', payload: `No se encontro el producto con id '${req.params.pid}'`});
-        
+        if (!p)  notFoundError( `No se encontro el producto con id '${req.params.pid}'`);
+
+        return res.status(200).json({status: 'success', payload : p});
     }
     catch (error) {
-        return res.status(500).json({status: 'error', message :'Internal error server'});
+        next(error)
     }
 }
 async function crearProducto(req,res){
@@ -65,12 +68,12 @@ async function crearProducto(req,res){
         const p = req.body
         
         const newProduct = await producServices.crearProducto(p)
-        if (newProduct == false) return res.status(400).json({status: 'error', payload :`El producto con codigo '${p.code}' ya existe`})
+        if (newProduct == false) throw badRequestError(`El producto con codigo '${p.code}' ya existe`)
         
         return res.status(201).json({status: 'success', payload : newProduct})
     } catch (error) {
         
-        return res.status(500).json({status: 'error', message :'Internal error server'});
+        next(error)
     }
     
 }
@@ -85,7 +88,7 @@ async function actualizarProductoConId(req,res){
         return res.status(201).json({status: 'success', payload : newProduct})
     } catch (error) {
         
-        return res.status(500).json({status: 'error', message :'Internal error server'});
+        next(error)
         
     }
     
@@ -96,22 +99,34 @@ async function borrarProductoConId(req,res){
         
         
         const deleted = await producServices.borrarProductoConId(pid)
-        if (!deleted) return res.status(404).json({status: 'error', payload: `No se elimino el producto con id '${req.params.pid}'`});
+        if (!deleted) throw notFoundError(`No se elimino el producto con id '${req.params.pid}'`);
         return res.status(201).json({status: 'success', payload:`se borro el producto con id ${pid}`})
 
     } catch (error) {
         
-        return res.status(500).json({status: 'error', message :'Internal error server'});
+        next(error)
         
     }
     
 }
-
+async function productMock(req,res){
+    try {
+        const quantity = req.params.quantity
+        const products = generateProductMocks(quantity)
+        
+        return res.status(201).json({status: 'success', payload: products})
+    }
+    catch( error ) {
+        console.log(error)
+        next(error)
+    }
+}
 
 export default {
     obtenerProductos,
     crearProducto,
     obtenerProductoConId,
     actualizarProductoConId,
-    borrarProductoConId
+    borrarProductoConId,
+    productMock
 }

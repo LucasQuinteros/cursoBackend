@@ -6,6 +6,7 @@ import { authorization, passportCall } from "../middleware/passport.middleware.j
 import { userLoginValidator } from "../validators/userLogin.validator.js";
 
 import sessionController from '../controllers/session.controller.js';
+import { generateUserMocks } from '../mocks/user.mock.js';
 
 
 
@@ -41,5 +42,10 @@ router.get("/email", async (req, res) => {
   
     return res.status(200).json({ status: "ok", msg: "Email enviado" });
   });
+
+router.get("/usermocks", async (req,res)=>{
+  const users = generateUserMocks(5)
+  return res.status(200).json({ status: "ok", msg: users });
+})
 
 export default router;

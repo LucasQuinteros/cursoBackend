@@ -8,7 +8,7 @@ import passport from "passport";
 import { initializePassport } from "./config/passport.config.js";
 import envs from './config/env.config.js'
 import cors from 'cors'
-
+import { errorHandle } from "./errors/errorHandle.js";
 
 
 const app = express();
@@ -31,6 +31,6 @@ app.use(passport.session())
 initializePassport()
 app.use(cors())
 app.use("/api",router);
-
+app.use(errorHandle);
 
 app.listen(envs.PORT,() => (console.log(`Server listen on port ${envs.PORT}`)))

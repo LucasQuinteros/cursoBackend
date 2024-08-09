@@ -1,6 +1,6 @@
 import cartsServices from "../services/carts.services.js"
 import ticketServices from "../services/ticket.services.js";
-
+import { notFoundError, badRequestError,unauthorizedError, forbiddenError } from "../errors/customError.js"
 //agrega un carrito nuevo sin productos
 async function createCart(req,res){
     try {
@@ -39,7 +39,8 @@ async function addProductToCart(req,res){
         
         return res.status(201).json({status : 'success', payload : cart});
     } catch (error) {
-        return res.status(400).json({status : 'error ',payload:error.message});
+        
+        next(error)
     }
 }
 async function deleteOneProductCart(req,res){
@@ -51,7 +52,8 @@ async function deleteOneProductCart(req,res){
 
         return res.status(201).json({status : 'success', payload : cart});
     } catch (error) {
-        return res.status(400).json({status : 'error ',msg:error.message});
+        
+        next(error)
     }
 }
 async function deleteProductsCart(req,res){
@@ -62,10 +64,11 @@ async function deleteProductsCart(req,res){
         const cart = await cartsServices.deleteProductsCart(cid)
 
         
-        if (cart.cart == false ) return res.status(404).json({status : 'error ',msg: "no se encontro el carrito"});
+        if (cart.cart == false ) throw notFoundError("no se encontro el carrito");
+         
         return res.status(201).json({status : 'success', payload : cart});
     } catch (error) {
-        return res.status(400).json({status : 'error ',msg:error.message});
+        next(error)
     }
 }
 async function updateProductsCart(req,res){
@@ -74,12 +77,12 @@ async function updateProductsCart(req,res){
         const data    = req.body.products
         
         const cart = await cartsServices.update(cid, data);
-        if (!cart) return res.status(404).json({ status: "Error", msg: "no se encontro el carrito" });
+        if (!cart) throw notFoundError("no se encontro el carrito");
         
         res.status(200).json({ status: "success", payload: cart });
       } catch (error) {
         console.log(error);
-        res.status(500).json({status : 'error ',payload:error.message});
+        next(error)
       }
       
 }
@@ -88,14 +91,14 @@ async function updateQuantityProductCart(req,res){
         const { cid, pid } = req.params;
         const { quantity } = req.body;
         
-        const cart = await cartsServices.updateQuantityProductInCart(cid, pid, quantity);
-        if (cart.product == false) return res.status(404).json({ status: "Error", msg: `No se encontró el producto con el id ${pid}` });
-        if (cart.cart == false) return res.status(404).json({ status: "Error", msg: `No se encontró el carrito con el id ${cid}` });
+        const cart = await cartsServices.updateQuantityProductCart(cid, pid, quantity);
+        if (cart.product == false) throw notFoundError( `No se encontró el producto con el id ${pid}` );
+        if (cart.cart == false) throw notFoundError(`No se encontró el carrito con el id ${cid}` );
     
         res.status(200).json({ status: "success", payload: cart });
       } catch (error) {
         console.log(error);
-        res.status(500).json({ status: "Error", msg: "Error interno del servidor" });
+        next(error)
       }
     
 }
@@ -103,7 +106,7 @@ async function purchase(req,res){
     try {
         const { cid } = req.params;
         const cart = await cartsServices.getById(cid);
-        if (!cart) return res.status(404).json({ status: "Error", msg: `No se encontró el carrito con el id ${cid}` });
+        if (!cart) throw notFoundError(`No se encontró el carrito con el id ${cid}` );
         // Obtener el total del carrito
         const total = await cartsServices.purchase(cid);
         // Crear el ticket
@@ -112,7 +115,7 @@ async function purchase(req,res){
         
         return res.status(201).json({status : 'success', payload : ticket });
     } catch (error) {
-        return res.status(400).json({status : 'error ',payload:error.message});
+        next(error)
     }
 }
 

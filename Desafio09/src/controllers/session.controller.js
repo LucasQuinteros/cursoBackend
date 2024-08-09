@@ -9,7 +9,7 @@ async function registrarUsuario (req, res) {
       res.status(201).json({ status: 'success', msg: 'Usuario Creado'})
     } catch (error) {
       console.log(error)
-      res.status(500).json({ status: 'error', msg: 'Internal server error'})
+      next(error)
     }
   }
   async function login(req,res){
@@ -20,7 +20,8 @@ async function registrarUsuario (req, res) {
         res.status(200).json({status : "success", msg : "Acceso concedido"})
       } catch (error) {
           console.log(error)
-          res.status(500).json({status : "error", msg : "Internal server error"})
+          
+          next(error)
       }
   }
   async function googleLogin(req,res){
@@ -28,7 +29,8 @@ async function registrarUsuario (req, res) {
           res.status(200).json({status : "success", payload: req.user})
       } catch (error) {
           console.log(error)
-          res.status(500).json({status : "error", msg : "Internal server error"})
+          
+          next(error)
       }
   }
   
@@ -39,7 +41,8 @@ async function registrarUsuario (req, res) {
           return res.status(200).json({status: "success", payload: userDto})
       } catch (error) {
           console.log(error)
-          res.status(500).json({status : "error", msg : "Internal server error"})
+          
+          next(error)
       }
   }
  
@@ -52,7 +55,8 @@ async function registrarUsuario (req, res) {
           res.status(200).json({status : "success", payload: "logout exitoso"})
       } catch (error) {
           console.log(error)
-          res.status(500).json({status : "error", msg : "Internal server error"})
+          
+          next(error)
       }
   }
 
